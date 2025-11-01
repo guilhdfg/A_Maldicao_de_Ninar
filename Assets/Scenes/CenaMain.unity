@@ -568,7 +568,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5059929299894682504, guid: 2131c85c878a65244ad8dd24a806ec6e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.712184
+      value: 4.736
       objectReference: {fileID: 0}
     - target: {fileID: 5059929299894682504, guid: 2131c85c878a65244ad8dd24a806ec6e, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3463,12 +3463,16 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7816337298860436458, guid: 38ed3402bbe478140ac71754fc3215f9, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.23670973
+      objectReference: {fileID: 0}
+    - target: {fileID: 7816337298860436458, guid: 38ed3402bbe478140ac71754fc3215f9, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2.734
       objectReference: {fileID: 0}
     - target: {fileID: 7816337298860436458, guid: 38ed3402bbe478140ac71754fc3215f9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.712184
+      value: 5.025
       objectReference: {fileID: 0}
     - target: {fileID: 7816337298860436458, guid: 38ed3402bbe478140ac71754fc3215f9, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3691,6 +3695,22 @@ PrefabInstance:
     - target: {fileID: 4281120765397851872, guid: e6ffe150a830b6b4a94aa6d8e987c25c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5392770302872438051, guid: e6ffe150a830b6b4a94aa6d8e987c25c, type: 3}
+      propertyPath: downViewAngle
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 5392770302872438051, guid: e6ffe150a830b6b4a94aa6d8e987c25c, type: 3}
+      propertyPath: downMoveDistance
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5392770302872438051, guid: e6ffe150a830b6b4a94aa6d8e987c25c, type: 3}
+      propertyPath: forwardMoveDistance
+      value: 1.95
+      objectReference: {fileID: 0}
+    - target: {fileID: 8817044120646236458, guid: e6ffe150a830b6b4a94aa6d8e987c25c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4606,7 +4626,7 @@ Light:
     m_Type: 1
     m_Resolution: -1
     m_CustomResolution: -1
-    m_Strength: 1
+    m_Strength: 0.78
     m_Bias: 0.05
     m_NormalBias: 0.4
     m_NearPlane: 0.2
