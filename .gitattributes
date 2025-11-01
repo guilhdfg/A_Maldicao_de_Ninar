@@ -1,0 +1,40 @@
+# ============ UNITY CONFIG ============
+
+# Normaliza finais de linha (LF)
+* text eol=lf
+
+# Scripts e arquivos de texto
+*.cs text eol=lf
+*.meta text eol=lf
+*.shader text eol=lf
+*.cginc text eol=lf
+*.hlsl text eol=lf
+*.compute text eol=lf
+*.json text eol=lf
+*.xml text eol=lf
+*.txt text eol=lf
+*.yaml text eol=lf
+
+# Arquivos binários (Git não altera)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.tga binary
+*.psd binary
+*.fbx binary
+*.prefab binary
+*.unity binary
+*.anim binary
+*.controller binary
+*.dll binary
+*.exe binary
+*.ttf binary
+*.wav binary
+*.ogg binary
+*.mp3 binary
+*.zip binary
+
+# Ignorar arquivos temporários
+Library/* binary
+Temp/* binary
+Build/* binary
