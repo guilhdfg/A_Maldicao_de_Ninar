@@ -3266,6 +3266,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 327900445668598029, guid: 33a8c28b4f33d61478a68178b96b46b8, type: 3}
   m_PrefabInstance: {fileID: 193025008}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &197909535 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1098394197061532138, guid: e6ffe150a830b6b4a94aa6d8e987c25c, type: 3}
+  m_PrefabInstance: {fileID: 6008478132351353697}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &197909539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 197909535}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2637f95d1e102b14eb4d75f96ba8172e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BedCameraController
+  centerViewAngle: 0
+  leftViewAngle: -90
+  rightViewAngle: 90
+  downViewAngle: 180
+  leftViewTiltX: 15
+  leftViewTiltY: -5
+  rotationSpeed: 5
+  screenEdgeThreshold: 0.1
+  moveForwardAmount: 0.5
+  downMovementSpeed: 3
+  initialDownTiltAngle: 15
+  finalDownTiltAngle: 180
+  downZRotation: 180
+  verticalOffset: -0.5
 --- !u!1001 &199536878
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -39302,7 +39333,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1098394197061532138, guid: e6ffe150a830b6b4a94aa6d8e987c25c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 197909539}
   m_SourcePrefab: {fileID: 100100000, guid: e6ffe150a830b6b4a94aa6d8e987c25c, type: 3}
 --- !u!4 &6959585343999246080 stripped
 Transform:
