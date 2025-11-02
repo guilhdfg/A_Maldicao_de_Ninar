@@ -6892,20 +6892,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfe5881d33248434b86d7e71b65656d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ControladorMonstros
-  ambiente: {fileID: 0}
-  jogador: {fileID: 0}
-  lanterna: {fileID: 0}
-  pontoJanela: {fileID: 0}
-  pontoPorta: {fileID: 0}
-  pontoRelogio: {fileID: 0}
-  pontoCama: {fileID: 0}
-  monstroPrefab: {fileID: 0}
-  tempoParaSumirComLuz: 2
-  distanciaMaxLuz: 10
-  tempoMinEntreAparicoes: 5
-  tempoMaxEntreAparicoes: 10
-  velocidadeAtaque: 3
-  tempoParadoAntesAtaque: 2
 --- !u!4 &1687948966
 Transform:
   m_ObjectHideFlags: 0
@@ -7063,11 +7049,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 4898a553a3b8bbf42b0931fd05fbf672, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.4
+      value: -1.55
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4898a553a3b8bbf42b0931fd05fbf672, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.144
+      value: -0.166
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4898a553a3b8bbf42b0931fd05fbf672, type: 3}
       propertyPath: m_LocalPosition.z
@@ -7075,19 +7061,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4898a553a3b8bbf42b0931fd05fbf672, type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.1219484
+      value: -0.040950056
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4898a553a3b8bbf42b0931fd05fbf672, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.021719737
+      value: 0.02981774
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4898a553a3b8bbf42b0931fd05fbf672, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.9872382
+      value: 0.99389833
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4898a553a3b8bbf42b0931fd05fbf672, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.100087814
+      value: -0.09798073
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4898a553a3b8bbf42b0931fd05fbf672, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -7095,7 +7081,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4898a553a3b8bbf42b0931fd05fbf672, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 194.465
+      value: 185.101
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4898a553a3b8bbf42b0931fd05fbf672, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
