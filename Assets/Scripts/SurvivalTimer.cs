@@ -49,6 +49,6 @@ public class SurvivalTimer : MonoBehaviour
         Debug.Log("?? Sobreviveu 6 minutos! Vitória!");
 
         // Aqui muda pra próxima cena
-        SceneManager.LoadScene("CenaVitoria"); // coloque o nome certo da cena
+        SceneManager.LoadScene("WinScene"); // coloque o nome certo da cena
     }
 }
