@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ControladorMonstros : MonoBehaviour
 {
@@ -217,6 +218,9 @@ public class MonstroBehavior : MonoBehaviour
 
     void Update()
     {
+
+
+
         // Verifica iluminação da lanterna
         if (lanterna != null && lanterna.enabled)
         {
@@ -252,7 +256,9 @@ public class MonstroBehavior : MonoBehaviour
             {
                 if(animator != null) animator.Play("JumpScare");
                 Debug.Log("💀 O jogador foi atacado!");
+                SceneManager.LoadScene("LoseScene");
                 Destroy(gameObject);
+                
             }
 
             yield return null;
