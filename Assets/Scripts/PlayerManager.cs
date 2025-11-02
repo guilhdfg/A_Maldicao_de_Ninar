@@ -1,17 +1,10 @@
+// Created by Tacioli21
+// Last updated: 2025-11-01 19:45:25 UTC
+
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
-    [Header("Camera Settings")]
-    [SerializeField] private float centerViewAngle = 0f;
-    [SerializeField] private float leftViewAngle = -90f;
-    [SerializeField] private float rightViewAngle = 90f;
-    [SerializeField] private float downViewAngle = 45f;
-    [SerializeField] private float leftViewTiltX = 15f; // Tilt when looking left
-    [SerializeField] private float leftViewTiltY = -5f; // Downward angle when looking left
-    [SerializeField] private float rotationSpeed = 5f;
-    [SerializeField] private float screenEdgeThreshold = 0.1f;
-
     [Header("Flashlight Settings")]
     [SerializeField] private Light spotLight;
     [SerializeField] private float maxIntensity = 1.5f;
@@ -32,13 +25,6 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private AudioClip batteryDeadSound;
     [SerializeField] private AudioClip flashlightClickSound;
 
-    // Camera Variables
-    private float targetYRotation;
-    private float currentYRotation;
-    private float currentXRotation = 0f;
-    private float targetXRotation = 0f;
-    private bool isLookingDown = false;
-
     // Flashlight Variables
     private float currentIntensity = 0f;
     private float targetIntensity = 0f;
@@ -51,16 +37,6 @@ public class PlayerManager : MonoBehaviour
     private bool hasPlayedDeadBatterySound = false;
     private AudioSource audioSource;
 
-    public enum ViewState
-    {
-        Center,
-        Left,
-        Right,
-        Down
-    }
-
-    private ViewState currentViewState = ViewState.Center;
-
     private void Start()
     {
         InitializeComponents();
@@ -68,12 +44,6 @@ public class PlayerManager : MonoBehaviour
 
     private void InitializeComponents()
     {
-        // Initialize Camera
-        targetYRotation = centerViewAngle;
-        currentYRotation = centerViewAngle;
-        transform.rotation = Quaternion.Euler(0f, centerViewAngle, 0f);
-
-        // Initialize Flashlight
         if (spotLight == null)
         {
             spotLight = GetComponentInChildren<Light>();
@@ -91,7 +61,6 @@ public class PlayerManager : MonoBehaviour
             Debug.LogError("No Light component found! Please add a Spotlight to the Player object.");
         }
 
-        // Initialize Battery
         currentBattery = maxBattery;
         audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.playOnAwake = false;
@@ -99,97 +68,20 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
-        // Only handle camera movement if flashlight is off
-        if (!isFlashlightOn)
-        {
-            HandleCameraMovement();
-        }
-
         HandleFlashlightInput();
         UpdateFlashlight();
-    }
-
-    private void HandleCameraMovement()
-    {
-        float mouseX = Input.mousePosition.x / Screen.width;
-        float mouseY = Input.mousePosition.y / Screen.height;
-
-        // Handle looking down
-        if (mouseY < screenEdgeThreshold && !isLookingDown)
-        {
-            isLookingDown = true;
-            currentViewState = ViewState.Down;
-            targetXRotation = downViewAngle;
-            targetYRotation = centerViewAngle;
-            return;
-        }
-        else if (mouseY >= screenEdgeThreshold && isLookingDown)
-        {
-            isLookingDown = false;
-            targetXRotation = 0f;
-            currentViewState = ViewState.Center;
-        }
-
-        // Handle horizontal movement when not looking down
-        if (!isLookingDown)
-        {
-            if (mouseX < screenEdgeThreshold)
-            {
-                targetYRotation = leftViewAngle;
-                targetXRotation = leftViewTiltX;
-                currentViewState = ViewState.Left;
-            }
-            else if (mouseX > 1 - screenEdgeThreshold)
-            {
-                targetYRotation = rightViewAngle;
-                targetXRotation = 0f;
-                currentViewState = ViewState.Right;
-            }
-            else
-            {
-                targetYRotation = centerViewAngle;
-                targetXRotation = 0f;
-                currentViewState = ViewState.Center;
-            }
-        }
-
-        // Smooth rotation interpolation
-        currentYRotation = Mathf.Lerp(currentYRotation, targetYRotation, rotationSpeed * Time.deltaTime);
-        currentXRotation = Mathf.Lerp(currentXRotation, targetXRotation, rotationSpeed * Time.deltaTime);
-
-        // Apply rotations with special handling for left view
-        Quaternion targetRotation;
-        if (currentViewState == ViewState.Left)
-        {
-            targetRotation = Quaternion.Euler(currentXRotation, currentYRotation + leftViewTiltY, 0f);
-        }
-        else
-        {
-            targetRotation = Quaternion.Euler(currentXRotation, currentYRotation, 0f);
-        }
-
-        transform.rotation = targetRotation;
     }
 
     private void HandleFlashlightInput()
     {
         if (!isFlashlightEnabled) return;
 
-        // Toggle flashlight on mouse click
         if (Input.GetMouseButtonDown(0))
         {
             isFlashlightOn = !isFlashlightOn;
             PlayFlashlightClickSound();
-
-            // Lock camera position when turning on flashlight
-            if (isFlashlightOn)
-            {
-                targetYRotation = currentYRotation;
-                targetXRotation = currentXRotation;
-            }
         }
 
-        // Update battery when flashlight is on
         if (isFlashlightOn)
         {
             currentBattery -= batteryDrainRate * Time.deltaTime;
@@ -216,7 +108,7 @@ public class PlayerManager : MonoBehaviour
 
         float finalIntensity = currentIntensity;
 
-        if (useFlickerEffect && currentIntensity > 0)
+        if (useFlickerEffect && isFlashlightOn && currentIntensity > 0)
         {
             float flickerMod = currentBattery < lowBatteryThreshold ? 2f : 1f;
             finalIntensity += Mathf.Sin(Time.time * flickerSpeed) * flickerIntensity * flickerMod;
@@ -265,9 +157,7 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    // Public methods for UI
     public float GetBatteryPercentage() => (currentBattery / maxBattery) * 100f;
     public bool IsLowBattery() => currentBattery <= lowBatteryThreshold;
     public bool IsFlashlightActive() => isFlashlightOn;
-    public ViewState GetCurrentViewState() => currentViewState;
 }
