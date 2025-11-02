@@ -256,7 +256,7 @@ public class MonstroBehavior : MonoBehaviour
             {
                 if(animator != null) animator.Play("JumpScare");
                 Debug.Log("💀 O jogador foi atacado!");
-                SceneManager.LoadScene("LoseScene");
+                SceneManager.LoadScene("JumpScareScene");
                 Destroy(gameObject);
                 
             }
