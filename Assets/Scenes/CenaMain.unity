@@ -2328,9 +2328,41 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2462748198794035643, guid: ef389150f027ede49987e3c74fcefa47, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -4.07
+      objectReference: {fileID: 0}
+    - target: {fileID: 2462748198794035643, guid: ef389150f027ede49987e3c74fcefa47, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 2462748198794035643, guid: ef389150f027ede49987e3c74fcefa47, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1.871
+      objectReference: {fileID: 0}
+    - target: {fileID: 3221067104172182010, guid: ef389150f027ede49987e3c74fcefa47, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -3.259
+      objectReference: {fileID: 0}
+    - target: {fileID: 3221067104172182010, guid: ef389150f027ede49987e3c74fcefa47, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.259
+      objectReference: {fileID: 0}
+    - target: {fileID: 3221067104172182010, guid: ef389150f027ede49987e3c74fcefa47, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.811
+      objectReference: {fileID: 0}
     - target: {fileID: 4682758614541347498, guid: ef389150f027ede49987e3c74fcefa47, type: 3}
       propertyPath: m_Name
       value: AmbienteSonoro
+      objectReference: {fileID: 0}
+    - target: {fileID: 6138810272311768432, guid: ef389150f027ede49987e3c74fcefa47, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6138810272311768432, guid: ef389150f027ede49987e3c74fcefa47, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -2.146
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
