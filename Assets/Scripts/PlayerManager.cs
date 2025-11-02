@@ -1,7 +1,8 @@
 // Created by Tacioli21
-// Last updated: 2025-11-01 19:45:25 UTC
+// Last updated: 2025-11-02 01:48:55 UTC
 
 using UnityEngine;
+using UnityEngine.UI; // <-- Necessário para usar Slider
 
 public class PlayerManager : MonoBehaviour
 {
@@ -9,14 +10,17 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private Light spotLight;
     [SerializeField] private float maxIntensity = 1.5f;
     [SerializeField] private float fadeSpeed = 8f;
-    [SerializeField] private float spotAngle = 45f;
     [SerializeField] private float spotRange = 10f;
-    
+
+    [Header("Spotlight Angle Settings")]
+    [SerializeField] private float normalSpotAngle = 45f;
+    [SerializeField] private float downViewSpotAngle = 90f; // Wider angle when looking down
+
     [Header("Flashlight Effects")]
     [SerializeField] private bool useFlickerEffect = true;
     [SerializeField] private float flickerIntensity = 0.1f;
     [SerializeField] private float flickerSpeed = 15f;
-    
+
     [Header("Battery Settings")]
     [SerializeField] private float maxBattery = 100f;
     [SerializeField] private float batteryDrainRate = 10f;
@@ -25,21 +29,26 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private AudioClip batteryDeadSound;
     [SerializeField] private AudioClip flashlightClickSound;
 
+    [Header("UI Settings")]
+    [SerializeField] private Slider batterySlider; // <-- Adiciona referência ao Slider
+
     // Flashlight Variables
     private float currentIntensity = 0f;
     private float targetIntensity = 0f;
     private bool isFlashlightOn = false;
-    
+
     // Battery Variables
     private float currentBattery;
     private bool isFlashlightEnabled = true;
     private bool hasPlayedLowBatteryWarning = false;
     private bool hasPlayedDeadBatterySound = false;
     private AudioSource audioSource;
+    private BedCameraController cameraController;
 
     private void Start()
     {
         InitializeComponents();
+        InitializeBatteryUI();
     }
 
     private void InitializeComponents()
@@ -52,7 +61,7 @@ public class PlayerManager : MonoBehaviour
         if (spotLight != null)
         {
             spotLight.type = LightType.Spot;
-            spotLight.spotAngle = spotAngle;
+            spotLight.spotAngle = normalSpotAngle;
             spotLight.range = spotRange;
             spotLight.intensity = 0;
         }
@@ -64,12 +73,28 @@ public class PlayerManager : MonoBehaviour
         currentBattery = maxBattery;
         audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.playOnAwake = false;
+        cameraController = GetComponentInChildren<BedCameraController>();
+    }
+
+    private void InitializeBatteryUI()
+    {
+        if (batterySlider != null)
+        {
+            batterySlider.minValue = 0f;
+            batterySlider.maxValue = 1f; // valor percentual entre 0 e 1
+            batterySlider.value = 1f; // começa cheio
+        }
+        else
+        {
+            Debug.LogWarning("Battery Slider não atribuído no PlayerManager!");
+        }
     }
 
     private void Update()
     {
         HandleFlashlightInput();
         UpdateFlashlight();
+        UpdateBatteryUI(); // <-- Atualiza a barra a cada frame
     }
 
     private void HandleFlashlightInput()
@@ -85,7 +110,7 @@ public class PlayerManager : MonoBehaviour
         if (isFlashlightOn)
         {
             currentBattery -= batteryDrainRate * Time.deltaTime;
-            
+
             if (currentBattery <= 0)
             {
                 BatteryDepleted();
@@ -103,6 +128,12 @@ public class PlayerManager : MonoBehaviour
     {
         if (spotLight == null) return;
 
+        // Update spot angle based on camera view
+        if (cameraController != null)
+        {
+            spotLight.spotAngle = cameraController.IsLookingDown() ? downViewSpotAngle : normalSpotAngle;
+        }
+
         targetIntensity = isFlashlightOn && isFlashlightEnabled ? maxIntensity : 0f;
         currentIntensity = Mathf.Lerp(currentIntensity, targetIntensity, fadeSpeed * Time.deltaTime);
 
@@ -117,6 +148,14 @@ public class PlayerManager : MonoBehaviour
         finalIntensity *= (currentBattery / maxBattery);
         finalIntensity = Mathf.Clamp(finalIntensity, 0, maxIntensity);
         spotLight.intensity = finalIntensity;
+    }
+
+    private void UpdateBatteryUI()
+    {
+        if (batterySlider != null)
+        {
+            batterySlider.value = currentBattery / maxBattery;
+        }
     }
 
     private void BatteryDepleted()
