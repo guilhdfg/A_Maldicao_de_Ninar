@@ -2,6 +2,7 @@
 // Last updated: 2025-11-02 01:48:55 UTC
 
 using UnityEngine;
+using UnityEngine.UI; // <-- Necessário para usar Slider
 
 public class PlayerManager : MonoBehaviour
 {
@@ -28,6 +29,9 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private AudioClip batteryDeadSound;
     [SerializeField] private AudioClip flashlightClickSound;
 
+    [Header("UI Settings")]
+    [SerializeField] private Slider batterySlider; // <-- Adiciona referência ao Slider
+
     // Flashlight Variables
     private float currentIntensity = 0f;
     private float targetIntensity = 0f;
@@ -44,6 +48,7 @@ public class PlayerManager : MonoBehaviour
     private void Start()
     {
         InitializeComponents();
+        InitializeBatteryUI();
     }
 
     private void InitializeComponents()
@@ -71,10 +76,25 @@ public class PlayerManager : MonoBehaviour
         cameraController = GetComponentInChildren<BedCameraController>();
     }
 
+    private void InitializeBatteryUI()
+    {
+        if (batterySlider != null)
+        {
+            batterySlider.minValue = 0f;
+            batterySlider.maxValue = 1f; // valor percentual entre 0 e 1
+            batterySlider.value = 1f; // começa cheio
+        }
+        else
+        {
+            Debug.LogWarning("Battery Slider não atribuído no PlayerManager!");
+        }
+    }
+
     private void Update()
     {
         HandleFlashlightInput();
         UpdateFlashlight();
+        UpdateBatteryUI(); // <-- Atualiza a barra a cada frame
     }
 
     private void HandleFlashlightInput()
@@ -128,6 +148,14 @@ public class PlayerManager : MonoBehaviour
         finalIntensity *= (currentBattery / maxBattery);
         finalIntensity = Mathf.Clamp(finalIntensity, 0, maxIntensity);
         spotLight.intensity = finalIntensity;
+    }
+
+    private void UpdateBatteryUI()
+    {
+        if (batterySlider != null)
+        {
+            batterySlider.value = currentBattery / maxBattery;
+        }
     }
 
     private void BatteryDepleted()
