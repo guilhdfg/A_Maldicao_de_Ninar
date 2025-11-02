@@ -1,93 +1,179 @@
-using System.IO;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
+[DisallowMultipleComponent]
 public class MainMenu : MonoBehaviour
 {
-    [Header("Cena do Jogo")]
-    [Tooltip("Nome EXATO da cena do jogo como aparece em File > Build Settings > Scenes In Build.")]
-    [SerializeField] private string gameSceneName = "";
+    [Header("Cena do jogo")]
+    [Tooltip("Nome EXATO da cena do jogo (precisa estar em File > Build Settings > Scenes In Build).")]
+    [SerializeField] private string gameSceneName = "CenaMain";
 
-    [Tooltip("Se verdadeiro e 'gameSceneName' estiver vazio, tenta carregar a próxima cena do Build Settings.")]
-    [SerializeField] private bool fallbackToNextScene = true;
+    [Header("Referências de UI (opcional, auto-detecta por nome se deixar vazio)")]
+    [SerializeField] private Button buttonPlay;
+    [SerializeField] private Button buttonQuit;
 
-#if UNITY_EDITOR
-    // Qualquer cena do projeto; o nome é copiado para 'gameSceneName' automaticamente (evita erro de digitação)
-    [SerializeField] private UnityEditor.SceneAsset gameSceneAsset;
+    [Header("Áudio SFX (cliques)")]
+    [Tooltip("Fonte 2D para SFX (Play On Awake = OFF, Loop = OFF). Se não houver, o script cria uma.")]
+    [SerializeField] private AudioSource sfxSource;
+    [Tooltip("Som de clique padrão (para Play e, se exitClickClip estiver vazio, para Quit também).")]
+    [SerializeField] private AudioClip clickClip;
+    [Tooltip("Som ao clicar em Sair (se vazio, usa clickClip).")]
+    [SerializeField] private AudioClip exitClickClip;
+    [Tooltip("Espera o clipe completo antes de executar a ação (Play/Quit)?")]
+    [SerializeField] private bool waitFullClickClip = false;
+    [Tooltip("Atraso mínimo antes da ação quando não esperar o clipe inteiro.")]
+    [SerializeField] private float minClickDelay = 0.05f;
 
-    private void OnValidate()
+    [Header("Música do menu (opcional)")]
+    [Tooltip("Fonte de música (2D). Se quiser, o script faz fade-out ao trocar de cena/sair.")]
+    [SerializeField] private AudioSource musicSource;
+    [SerializeField] private bool fadeOutMusicOnAction = true;
+    [SerializeField] private float musicFadeTime = 0.3f;
+
+    private bool quitting;
+
+    private void Awake()
     {
-        if (gameSceneAsset != null)
+        // Tenta auto-atribuir botões por nome se não foram informados
+        if (buttonPlay == null)
         {
-            string path = UnityEditor.AssetDatabase.GetAssetPath(gameSceneAsset);
-            string name = Path.GetFileNameWithoutExtension(path);
-            if (gameSceneName != name)
-                gameSceneName = name;
+            var go = GameObject.Find("ButtonPlay");
+            if (go) buttonPlay = go.GetComponent<Button>();
+        }
+        if (buttonQuit == null)
+        {
+            var go = GameObject.Find("ButtonQuit");
+            if (go) buttonQuit = go.GetComponent<Button>();
+        }
+
+        // Garante um AudioSource para SFX (2D) se não houver
+        if (sfxSource == null)
+        {
+            sfxSource = GetComponent<AudioSource>();
+            if (sfxSource == null)
+                sfxSource = gameObject.AddComponent<AudioSource>();
+
+            sfxSource.playOnAwake = false;
+            sfxSource.loop = false;
+            sfxSource.spatialBlend = 0f; // 2D
+        }
+
+        // Conecta os botões via código
+        if (buttonPlay != null)
+        {
+            buttonPlay.onClick.RemoveListener(OnPlayClicked); // evita duplicar se já conectado
+            buttonPlay.onClick.AddListener(OnPlayClicked);
+        }
+        else
+        {
+            Debug.LogWarning("MainMenu: ButtonPlay não encontrado. Arraste a referência no Inspector ou renomeie o botão para 'ButtonPlay'.");
+        }
+
+        if (buttonQuit != null)
+        {
+            buttonQuit.onClick.RemoveListener(OnQuitClicked);
+            buttonQuit.onClick.AddListener(OnQuitClicked);
+        }
+        else
+        {
+            Debug.LogWarning("MainMenu: ButtonQuit não encontrado. Arraste a referência no Inspector ou renomeie o botão para 'ButtonQuit'.");
         }
     }
-#endif
 
-    // Botão "Jogar"
-    public void Play()
+    private void OnPlayClicked()
     {
-        // Se um nome foi definido, tenta carregar por nome (desde que esteja nas Scenes In Build)
-        if (!string.IsNullOrWhiteSpace(gameSceneName))
+        // Som de clique (se houver)
+        float delay = 0f;
+        if (sfxSource != null && clickClip != null)
         {
-            if (IsSceneInBuildSettings(gameSceneName))
-            {
-                Debug.Log($"Carregando cena '{gameSceneName}'...");
-                SceneManager.LoadSceneAsync(gameSceneName);
-                return;
-            }
-            else
-            {
-                Debug.LogError($"A cena '{gameSceneName}' não está em File > Build Settings > Scenes In Build. Adicione-a para carregar corretamente.");
-                return;
-            }
+            sfxSource.PlayOneShot(clickClip);
+            delay = waitFullClickClip ? clickClip.length : Mathf.Max(minClickDelay, 0.01f);
         }
 
-        // Sem configuração: comportamento simples (log) ou fallback para próxima cena
-        if (fallbackToNextScene)
-        {
-            int currentIndex = SceneManager.GetActiveScene().buildIndex;
-            int total = SceneManager.sceneCountInBuildSettings;
-            if (currentIndex + 1 < total)
-            {
-                string nextPath = SceneUtility.GetScenePathByBuildIndex(currentIndex + 1);
-                string nextName = Path.GetFileNameWithoutExtension(nextPath);
-                Debug.Log($"Carregando próxima cena em Build Settings: '{nextName}' (índice {currentIndex + 1}).");
-                SceneManager.LoadSceneAsync(currentIndex + 1);
-                return;
-            }
-        }
+        // Fade na música (opcional)
+        if (fadeOutMusicOnAction && musicSource != null)
+            StartCoroutine(FadeOut(musicSource, musicFadeTime));
 
-        // Caso não haja cena configurada nem próxima no Build Settings
-        Debug.Log("Jogo iniciado (sem cena configurada). Adicione a cena do jogo ao Build Settings ou preencha 'gameSceneName' no Inspector.");
+        // Carrega a cena após o delay (usa tempo real para não depender de timeScale)
+        StartCoroutine(LoadSceneAfter(delay));
     }
 
-    // Botão "Sair do Jogo"
-    public void QuitGame()
+    private void OnQuitClicked()
     {
-        Debug.Log("Saindo do jogo...");
+        if (quitting) return;
+        quitting = true;
+
+        // Toca som de sair (ou o mesmo de clique)
+        float delay = 0f;
+        var clip = exitClickClip != null ? exitClickClip : clickClip;
+        if (sfxSource != null && clip != null)
+        {
+            sfxSource.PlayOneShot(clip);
+            delay = waitFullClickClip ? clip.length : Mathf.Max(minClickDelay, 0.01f);
+        }
+
+        if (fadeOutMusicOnAction && musicSource != null)
+            StartCoroutine(FadeOut(musicSource, musicFadeTime));
+
+        StartCoroutine(QuitAfter(delay));
+    }
+
+    private IEnumerator LoadSceneAfter(float delay)
+    {
+        float wait = Mathf.Max(delay, fadeOutMusicOnAction ? musicFadeTime : 0f);
+        if (wait > 0f) yield return new WaitForSecondsRealtime(wait);
+
+        if (string.IsNullOrWhiteSpace(gameSceneName))
+        {
+            Debug.LogError("MainMenu: 'gameSceneName' não definido. Preencha com o nome exato da cena (ex.: CenaMain).");
+            yield break;
+        }
+
+        // Tenta carregar a cena
+        AsyncOperation op;
+        try
+        {
+            op = SceneManager.LoadSceneAsync(gameSceneName, LoadSceneMode.Single);
+        }
+        catch
+        {
+            Debug.LogError($"MainMenu: Falha ao carregar '{gameSceneName}'. Certifique-se de adicioná-la em File > Build Settings > Scenes In Build.");
+            yield break;
+        }
+
+        if (op != null) op.allowSceneActivation = true;
+    }
+
+    private IEnumerator QuitAfter(float delay)
+    {
+        float wait = Mathf.Max(delay, fadeOutMusicOnAction ? musicFadeTime : 0f);
+        if (wait > 0f) yield return new WaitForSecondsRealtime(wait);
+
 #if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false; // Para o Play Mode no Editor
+        UnityEditor.EditorApplication.isPlaying = false;
 #elif UNITY_WEBGL
         Debug.Log("Application.Quit() não é suportado no WebGL.");
 #else
-        Application.Quit(); // Fecha o aplicativo no build
+        Application.Quit();
 #endif
     }
 
-    private bool IsSceneInBuildSettings(string sceneName)
+    private IEnumerator FadeOut(AudioSource source, float time)
     {
-        int total = SceneManager.sceneCountInBuildSettings;
-        for (int i = 0; i < total; i++)
+        if (source == null || time <= 0f) yield break;
+
+        float start = source.volume;
+        float t = 0f;
+        while (t < time)
         {
-            string path = SceneUtility.GetScenePathByBuildIndex(i);
-            string name = Path.GetFileNameWithoutExtension(path);
-            if (string.Equals(name, sceneName, System.StringComparison.OrdinalIgnoreCase))
-                return true;
+            t += Time.unscaledDeltaTime;
+            source.volume = Mathf.Lerp(start, 0f, t / time);
+            yield return null;
         }
-        return false;
+        source.volume = 0f;
+        source.Stop();
+        source.volume = start; // restaura valor para usos futuros
     }
 }
