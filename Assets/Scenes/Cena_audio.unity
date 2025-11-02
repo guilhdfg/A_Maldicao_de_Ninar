@@ -7561,6 +7561,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 011e32ceb24c31e429a43daa3aa183ec, type: 3}
+--- !u!1 &352117843 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4565695295120383577, guid: 149914faacece2940a120e1783c4c6a9, type: 3}
+  m_PrefabInstance: {fileID: 1426748879}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &352746033 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7243868798994036714, guid: b38e514b977977746afd127f3cb68a71, type: 3}
@@ -21203,16 +21208,19 @@ MonoBehaviour:
   leftViewAngle: -90
   rightViewAngle: 90
   downViewAngle: 180
-  leftViewTiltX: 15
-  leftViewTiltY: -5
+  leftTiltX: 15
+  leftTiltY: -5
   rotationSpeed: 5
-  screenEdgeThreshold: 0.1
-  moveForwardAmount: 0.5
-  downMovementSpeed: 3
-  initialDownTiltAngle: 15
-  finalDownTiltAngle: 180
-  downZRotation: 180
-  verticalOffset: -0.5
+  mouseDetectionWidth: 0.3
+  mouseDetectionHeight: 0.2
+  forwardMoveDistance: 1
+  downMoveDistance: 0.5
+  moveSpeed: 3
+  sequenceDelay: 0.3
+  leftKey: 97
+  rightKey: 100
+  downKey: 115
+  upKey: 119
 --- !u!1001 &1095321345
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21672,13 +21680,13 @@ MonoBehaviour:
   pontoPorta: {fileID: 1740890505}
   pontoRelogio: {fileID: 581520773}
   pontoCama: {fileID: 1699494280}
-  monstroPrefab: {fileID: 1789437589}
-  tempoParaSumirComLuz: 5
+  monstroPrefab: {fileID: 352117843}
+  tempoParaSumirComLuz: 3
   distanciaMaxLuz: 100
   tempoMinEntreAparicoes: 10
   tempoMaxEntreAparicoes: 20
   velocidadeAtaque: 10
-  tempoParadoAntesAtaque: 5
+  tempoParadoAntesAtaque: 8
 --- !u!1001 &1123499422
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -28308,10 +28316,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3719395497478071300, guid: 149914faacece2940a120e1783c4c6a9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1789437591}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 149914faacece2940a120e1783c4c6a9, type: 3}
 --- !u!4 &1427406390 stripped
 Transform:
@@ -34297,34 +34302,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b52d4d49f88b0ae459690b1986dce8bc, type: 3}
---- !u!1 &1789437589 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3719395497478071300, guid: 149914faacece2940a120e1783c4c6a9, type: 3}
-  m_PrefabInstance: {fileID: 1426748879}
-  m_PrefabAsset: {fileID: 0}
---- !u!136 &1789437591
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1789437589}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2.0283194
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.996352, z: 0}
 --- !u!4 &1791191912 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2771145621937507115, guid: 11faa60ff496c5f44ac54cf0ade1290b, type: 3}
